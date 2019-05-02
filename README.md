@@ -1,11 +1,11 @@
 
-####To run it Locally please have Docker Compose installed !
+#### To run it Locally please have Docker Compose installed !
 
-####Build images - docker-compose up --build 
+#### Build images - docker-compose up --build 
 Also for more testing you good add Selenium to your docker-compose.yml 
 So you could extend your testing cases in your app when spining up.
 
-####Also in Kubernetes with minikube
+#### Also in Kubernetes with minikube
 Please install Helm Chart :
 For locally testing with minikube
 `brew install kubernetes-helm`
@@ -13,45 +13,45 @@ For locally testing with minikube
 `helm init `
 and deploy your charts!
 
-###View your app  browser http://0.0.0.0:8000/
+### View your app  browser http://0.0.0.0:8000/
 
-####If you want to run the project on the cloud follow the next steps
+#### If you want to run the project on the cloud follow the next steps
 Ofcourse if you are going to host your registry you will need to auth your registry for the images.
        gcloud auth configure-docker
-####On the home page on GCP :
+#### On the home page on GCP :
 #### IN Tools
 Tools:
   --- Container Registry to start
 
-####then:
+#### then:
 docker tag octapp-image gcr.io/[PROJECT-ID]/octapp-image:tag1
 
 docker push gcr.io/[PROJECT-ID]/octapp:tag1
 docker pull gcr.io/[PROJECT-ID]/octapp:tag1
 
-####for your latest images of your app.
+#### for your latest images of your app.
 Also for your secrets use :
 `$ echo mysecretpassword | base64`
 
-####Then create your Helm chart with :
+#### Then create your Helm chart with :
 `$ helm create myhelm`
 `$ helm install --name myapp ./mychart --set service.type=NodePort`
 
 `$ kubectl create -f tiller-rbac-config.yaml`
 `helm init --service-account tiller`
 
-To intall memcahced to your cluster with helm:
+To intall memcahce to your cluster with helm:
 `helm install stable/memcached --name mycache --set replicaCount=2`
 
 Verify that exist :
 `kubectl get service mycache-memcached -o jsonpath="{.spec.clusterIP}"`
 
 
-####For Load balancing
+#### For Load balancing
 orizontalpodautoscaler autoscaling nginx hpa
 kube-dns-autoscaler
 
-###For Monitoring using Prometheus
+####For Monitoring using Prometheus
 `helm install --name prometheus stable/prometheus`
 
 `helm ls` to list what is deployed!
@@ -66,7 +66,7 @@ prometheus-to-sd is a simple component that can scrape metrics stored in prometh
 
 For most our services you can use help to deploy it an configure it to the GKE cluster you have created.
 
-####For your Secrets please do
+#### For your Secrets please do
 Create storage in google cloud.
 
 gcloud-mysql-sqlproxy PASSWORD=$(kubectl get secret --namespace databases -gcloud-mysql-sqlproxy -o jsonpath="{.data.gcloud-mysql-sqlproxy-password}" | base64 --decode; echo)
@@ -74,35 +74,35 @@ gcloud-mysql-sqlproxy PASSWORD=$(kubectl get secret --namespace databases -gclou
 
 # Let's first convert our password into base64 encoding.
 
-`echo -n $PGPASSWORD | base64`
+`echo -n $PASSWORD | base64`
 
-# MUST DO : Copy the generated value and replace it with `YOUR_ENCODED_PASSWORD` in the `polls-password-secret.yml`. Then create the secret.
+#### MUST DO : Copy the generated value and replace it with `YOUR_ENCODED_PASSWORD` in the `password-secret.yml`. Then create the secret.
 
 `kubectl create -f db-password-secret.yml`
 
-# Now that the secret has been setup, lets migrate the data.
+#### Now that the secret has been setup, lets migrate the data.
 `kubectl create -f migration.yml`
 
-# Wait for a minute and check the status of the migration using folling commands.
+#### Wait for a minute and check the status of the migration using folling commands.
 `kubectl get jobs`
 
-# In order to check the logs, identify the pod running the pod running migration.
+#### In order to check the logs, identify the pod running the pod running migration.
 `kubectl get pods --show-all`
 
-# Check the logs of the pod
-# kubectl logs POD_NAME
+#### Check the logs of the pod
+#### kubectl logs POD_NAME
 `kubectl logs `
 
-# We can just delete the jobs using
+#### We can just delete the jobs using
 `kubectl delete -f migration.yml`
 
 `kubectl create -f cloud-storage-secrets.yml`
 
-####For Kubernetes cluster (GKE):
+#### For Kubernetes cluster (GKE):
 
 From command line :  ` gcloud beta container --project "rock-dragon-239409" clusters create "octapp-cluster-1" --zone "us-central1-a" --username "admin" --cluster-version "1.11.8-gke.6" --machine-type "n1-standard-1" --image-type "COS" --disk-type "pd-standard" --disk-size "100" --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --num-nodes "3" --enable-cloud-logging --enable-cloud-monitoring --no-enable-ip-alias --network "projects/rock-dragon-239409/global/networks/default" --subnetwork "projects/rock-dragon-239409/regions/us-central1/subnetworks/default" --addons HorizontalPodAutoscaling,HttpLoadBalancing --enable-autoupgrade --enable-autorepair` 
 
-####For Docker
+#### For Docker
 
 Build a Docker image, replacing <your-project-id> with your project ID.
 
@@ -121,7 +121,7 @@ Also
 
 for DB's
 
-###Prerequisites CloudSQL(MSQL)
+#### Prerequisites CloudSQL(MSQL)
  Kubernetes cluster on Google Container Engine (GKE)
  Kubernetes cluster on Google Compute Engine (GCE)
  Cloud SQL Administration API enabled
@@ -131,7 +131,7 @@ With HELM deployment (as google made it easy):
 `helm upgrade pg-sqlproxy stable/gcloud-mysql-sqlproxy --namespace sqlproxy \ --set serviceAccountKey="$(cat service-account.json | base64)" \ --set cloudsql.instances[0].instance=INSTANCE \  --set cloudsql.instances[0].project=PROJECT \ --set cloudsql.instances[0].region=REGION \ --set cloudsql.instances[0].port=3306 -i`
 
 
-####Jekins CI/CD
+#### Jekins CI/CD
 
 For the Deployment Pipeline you can you the `Jenkinsfile`
 and by having deployed the Jenkins inside your cluster with Helm.
@@ -146,7 +146,7 @@ Also you will need to use the Kubernetes Plugin:
 https://wiki.jenkins.io/display/JENKINS/Kubernetes+Plugin
 
 
-####Deployment look like
+#### Deployment look like
 
 When you will run `$ kubectl get pods --all-namespaces` you will get everything that you deployed!
 etc.
